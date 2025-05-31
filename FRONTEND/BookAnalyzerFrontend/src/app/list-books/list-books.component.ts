@@ -1,9 +1,8 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, } from '@angular/core';
 import { NavigationComponent } from "../navigation/navigation.component";
-import { BookDto, BookTitleDto, BookTitles, Books  } from '../_models/book_models';
+import { BookTitles,   } from '../_models/book_models';
 import {CommonModule} from '@angular/common';
-import { Environment } from '../environment/enviroment';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 import { BookService } from '../services/book.service';
 
 @Component({
@@ -34,10 +33,10 @@ export class ListBooksComponent implements OnInit {
       books => {
         this.books = books;
         this.isLoading = false;
-        console.log('Books loaded:', this.books);
+        //console.log('Books loaded:', this.books);
       },
       error => {
-        console.error('Error loading books:', error);
+        console.error('LIST-BOOKS.ts: Error loading books:', error);
         this.errorMessage = 'Hiba történt a könyvek betöltése során.';
         this.isLoading = false;
       }
