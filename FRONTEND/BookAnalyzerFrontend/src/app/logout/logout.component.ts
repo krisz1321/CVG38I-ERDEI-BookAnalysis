@@ -17,9 +17,6 @@ export class LogoutComponent implements OnInit {
 
 	ngOnInit(): void {
 
-		localStorage.removeItem('token');
-		localStorage.removeItem('userName');
-		localStorage.removeItem('userId');
 		localStorage.setItem('bookanalyzer-token', '');
 		localStorage.setItem('bookanalyzer-token-expiration', '');
 		localStorage.clear()

@@ -62,7 +62,7 @@ export class LoginComponent {
   }
 
   public sendLoginCredentials(): void {
-    // Reset üzenetek
+   
     this.errorMessage = '';
     this.successMessage = '';
     this.isLoading = true;

@@ -1,0 +1,53 @@
+$border-color: #878792;
+$table-border-color: #8a9397;
+
+.card {
+  border: 2px solid $border-color;
+  border-radius: 10px;
+}
+
+.form-select {
+  border-radius: 8px;
+}
+
+.table {
+  border: 2px solid $table-border-color;
+}
+
+.table th,
+.table td {
+  border: 2px solid $table-border-color;
+}
+
+.table-responsive {
+  border: 2px solid $table-border-color;
+  border-radius: 8px;
+}
+
+.badge {
+  font-size: 0.85rem;
+}
+
+.pagination .page-link {
+  border-radius: 8px;
+  margin: 0 3px;
+}
+
+h1 {
+  text-align: center;
+  font-weight: 500;
+}
+
+.table td:first-child {
+  text-align: center;
+}
+
+.table td:nth-child(2) {
+  text-align: center;
+  white-space: nowrap;
+}
+
+.table th {
+  white-space: nowrap;
+  border: 2px solid $table-border-color !important;
+}
