@@ -5,6 +5,7 @@ import { ListBooksComponent } from './list-books/list-books.component';
 import { ListWordsComponent } from './list-words/list-words.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
+import { LogoutComponent } from './logout/logout.component';
 
 export const routes: Routes = [
 	{path: '', component: HomeComponent},
@@ -13,6 +14,7 @@ export const routes: Routes = [
     {path: 'list-words', component: ListWordsComponent}, 
 	{path: 'login', component: LoginComponent},
 	{path: 'register', component: RegisterComponent},
+	{path: 'logout', component: LogoutComponent},
 
 	{path: '**', redirectTo: '', pathMatch: 'full'} 
 ];

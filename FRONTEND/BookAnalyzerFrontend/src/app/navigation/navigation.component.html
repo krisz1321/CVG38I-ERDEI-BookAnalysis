@@ -14,32 +14,32 @@
         </li>
         <li class="nav-item">
           <a class="nav-link" routerLink="/list-books" routerLinkActive="active">
-            <i class="bi bi-card-text me-1"></i>
+            <i class="bi bi-book me-1"></i>
             Könyvek
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link" routerLink="/list-words" routerLinkActive="active">
-            <i class="bi bi-card-text me-1"></i>
-            Szókártyák
+            <i class="bi bi-card-list me-1"></i>
+            Szavak
           </a>
         </li>
-		<li class="nav-item">
-	   <a class="nav-link" routerLink="/register" routerLinkActive="active" *ngIf="!this.api.isLoggedIn()">
-		 <i class="bi bi-card-text me-1"></i>
-		 Regisztráció
-		</a>
-		</li>
-		   <li class="nav-item">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/register" routerLinkActive="active" *ngIf="!this.api.isLoggedIn()">
+            <i class="bi bi-person-plus me-1"></i>
+            Regisztráció
+          </a>
+        </li>
+        <li class="nav-item">
           <a class="nav-link" routerLink="/login" routerLinkActive="active" *ngIf="!this.api.isLoggedIn()">
-            <i class="bi bi-card-text me-1"></i>
-            Login
+            <i class="bi bi-box-arrow-in-right me-1"></i>
+            Bejelentkezés
           </a>
         </li>
-		   <li class="nav-item">
+        <li class="nav-item">
           <a class="nav-link" routerLink="/logout" routerLinkActive="active" *ngIf="this.api.isLoggedIn()">
-            <i class="bi bi-card-text me-1"></i>
-            Login
+            <i class="bi bi-box-arrow-right me-1"></i>
+            Kilépés
           </a>
         </li>
       </ul>
