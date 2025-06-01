@@ -47,3 +47,16 @@ export class Phrases {
 	this.phrases = [];
   }
 }
+
+
+export interface PaginationState {
+  currentPage: number;
+  pageSize: number;
+  totalItems: number;
+  totalPages: number;
+}
+
+export interface PaginationConfig {
+  pageSizeOptions: number[];
+  defaultPageSize: number;
+}
