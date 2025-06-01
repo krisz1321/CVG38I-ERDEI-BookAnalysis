@@ -1,3 +1,91 @@
 <app-navigation></app-navigation>
 
-<p>login works!</p>
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+      <div class="card shadow">
+        <div class="card-header bg-primary text-white text-center">
+          <h4 class="mb-0">
+            <i class="bi bi-person-circle me-2"></i>
+            Bejelentkezés
+          </h4>
+        </div>
+        <div class="card-body p-4">
+          
+          <!-- Siker üzenet -->
+          <div *ngIf="successMessage" class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle me-2"></i>
+            {{ successMessage }}
+          </div>
+
+          <!-- Hiba üzenet -->
+          <div *ngIf="errorMessage" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="bi bi-exclamation-triangle me-2"></i>
+            {{ errorMessage }}
+          </div>
+
+          <form (ngSubmit)="sendLoginCredentials()" #loginForm="ngForm">
+            
+            <!-- Felhasználónév  -->
+            <div class="form-outline mb-4">
+			<label class="form-label" for="username">Felhasználónév</label>
+              <input 
+                type="text" 
+                id="username" 
+                class="form-control"
+                [class.is-invalid]="userName.invalid && userName.touched"
+                [class.is-valid]="userName.valid && userName.touched"
+                [(ngModel)]="loginModel.userName"
+                [formControl]="userName"
+                name="username"
+                required />
+              <div *ngIf="userName.invalid && userName.touched" class="invalid-feedback d-block">
+                {{ getUserNameErrorMessage() }}
+              </div>
+            </div>
+
+            <!-- Jelszó  -->
+            <div class="form-outline mb-4">
+			  <label class="form-label" for="password">Jelszó</label>
+              <input 
+                type="password" 
+                id="password" 
+                class="form-control"
+                [class.is-invalid]="password.invalid && password.touched"
+                [class.is-valid]="password.valid && password.touched"
+                [(ngModel)]="loginModel.password"
+                [formControl]="password"
+                name="password"
+                required />
+              <div *ngIf="password.invalid && password.touched" class="invalid-feedback d-block">
+                {{ getPasswordErrorMessage() }}
+              </div>
+            </div>
+
+            <!-- Bejelentkezés gomb -->
+            <div class="d-grid gap-2">
+              <button 
+                type="submit" 
+                class="btn btn-primary btn-lg btn-block"
+                [disabled]="!checkInputs() || isLoading">
+                <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                <i *ngIf="!isLoading" class="bi bi-box-arrow-in-right me-2"></i>
+                {{ isLoading ? 'Bejelentkezés...' : 'Bejelentkezés' }}
+              </button>
+            </div>
+
+            <!-- Regisztráció link -->
+            <div class="text-center mt-4">
+              <p class="mb-0">
+                Még nincs fiókja? 
+                <a [routerLink]="['/register']" class="text-primary text-decoration-none fw-bold">
+                  Regisztráció
+                </a>
+              </p>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

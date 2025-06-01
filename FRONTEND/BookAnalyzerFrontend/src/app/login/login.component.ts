@@ -4,7 +4,7 @@ import { FormControl, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { LoginModel } from '../_models/login_models';
 import { Environment } from '../environment/enviroment';
-import { NavigationComponent } from "../navigation/navigation.component";
+import { NavigationComponent } from '../navigation/navigation.component';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TokenModel } from '../_models/token_model';
