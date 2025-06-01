@@ -1,14 +1,31 @@
-.book-card {
-  height: auto !important;
-  min-height: 200px; /*magasság*/
+$border-color: #e9ecef;
+$background-color: #f8f9fa;
+
+.card {
+  border: 2px solid $border-color;
+  border-radius: 16px;
+  min-height: 200px;
 }
 
-.row {
-  align-items: flex-start !important;
+.form-control {
+  border-radius: 6px;
 }
 
-/*Animáció*/
-.alert-info {
+.btn {
+  border-radius: 10px;
+}
+
+.alert {
+  border-radius: 6px;
+}
+
+h2 {
+	text-align: center;
+  	margin-bottom: 20px;
+}
+
+// Animáció
+.bg-light {
   animation: slideIn 0.3s ease-in-out;
 }
 

@@ -1,159 +1,130 @@
 <app-navigation></app-navigation>
 
-<div class="container mt-4">
-  <h2 class="mb-4">{{ massage }}</h2>
-  
-  <!-- Könyv választó -->
+<div class="container-fluid py-4">
+  <!-- Header -->
   <div class="row mb-4">
-    <div class="col-md-6">
-      <label for="bookSelect" class="form-label">Könyv kiválasztása:</label>
-      <select 
-        id="bookSelect" 
-        class="form-select" 
-        [(ngModel)]="selectedBookId" 
-        (change)="onBookSelected()">
-        <option value="">-- Válassz könyvet --</option>
-        <option *ngFor="let book of books" [value]="book.id">
-          {{ book.title }}
-        </option>
-      </select>
-    </div>
-  </div>
-
-  <!-- Kiválasztott könyv információ -->
-  <div *ngIf="selectedBookId" class="row mb-3">
     <div class="col-12">
-      <div class="alert alert-info">
-        <h5 class="mb-1">Kiválasztott könyv: {{ getSelectedBookTitle() }}</h5>
-        <small class="mb-1">ID: {{ selectedBookId }}</small>
+      <h1 class="h3 text-muted fw-light">{{ massage }}</h1>
+    </div>
+  </div>
+
+  <!-- Controls Card -->
+  <div class="card shadow-sm border mb-4">
+    <div class="card-body p-4">
+      <div class="row align-items-end">
+        <!-- Book selector -->
+        <div class="col-md-6 mb-3 mb-md-0">
+          <label for="bookSelect" class="form-label small text-muted mb-2">Könyv</label>
+          <select 
+            id="bookSelect" 
+            class="form-select border bg-light" 
+            [(ngModel)]="selectedBookId" 
+            (change)="onBookSelected()">
+            <option value="">Válassz könyvet</option>
+            <option *ngFor="let book of books" [value]="book.id">
+              {{ book.title }}
+            </option>
+          </select>
+        </div>
+        
+        <!-- Page size selector -->
+        <div class="col-md-3" *ngIf="selectedBookId">
+          <label for="pageSize" class="form-label small text-muted mb-2">Elemek/oldal</label>
+          <select 
+            id="pageSize" 
+            class="form-select border bg-light" 
+            [value]="pageSize" 
+            (change)="changePageSize(+$any($event.target).value)">
+            <option *ngFor="let size of getPageSizeOptions()" [value]="size">
+              {{ size }}
+            </option>
+          </select>
+        </div>
+        
+        <!-- Stats -->
+        <div class="col-md-3 text-end" *ngIf="selectedBookId && currentPhrases.phrases.length > 0">
+          <small class="text-muted d-block">{{ totalItems }} kifejezés</small>
+          <small class="text-muted">{{ currentPhrases.phrases.length }} megjelenítve</small>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- Szavak táblázat - csak ha van kiválasztott könyv -->
+  <!-- Content -->
   <div *ngIf="selectedBookId && currentPhrases.phrases.length > 0">
-    
-    <!-- Oldal méret választó -->
-    <div class="row mb-3">
-      <div class="col-md-3">
-        <label for="pageSize" class="form-label">Elemek száma oldalanként:</label>
-        <select 
-          id="pageSize" 
-          class="form-select" 
-          [value]="pageSize" 
-          (change)="changePageSize(+$any($event.target).value)">
-          <option *ngFor="let size of getPageSizeOptions()" [value]="size">
-            {{ size }}
-          </option>
-        </select>
+    <!-- Words Table -->
+    <div class="card shadow-sm border mb-4">
+      <div class="table-responsive">
+        <table class="table table-hover mb-0">
+          <thead class="bg-light">
+            <tr>
+              <th scope="col" class="border py-3 ps-4 text-muted small fw-normal">GYAKORISÁG</th>
+              <th scope="col" class="border py-3 text-muted small fw-normal">ANGOL KIFEJEZÉS</th>
+              <th scope="col" class="border py-3 text-muted small fw-normal">MAGYAR JELENTÉS</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let phrase of currentPhrases.phrases; trackBy: trackByPhraseId" class="border-bottom">
+              <td class="ps-4 py-3 align-middle border-end">
+                <span class="badge rounded-pill bg-primary">{{ phrase.frequency }}</span>
+              </td>
+              <td class="py-3 align-middle border-end">
+                <span class="fw-medium">{{ phrase.phrase }}</span>
+              </td>
+              <td class="py-3 align-middle">
+                {{ phrase.hungarianMeaning }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
 
-    <!-- Bootstrap táblázat -->
-   <div class="table-responsive">
- 	 <table class="table table-striped table-hover table-bordered">
-        <thead class="table-dark">
-          <tr>
-            <th scope="col">Gyakoriság</th>
-            <th scope="col">Angol kifejezés</th>
-            <th scope="col">Magyar jelentés</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let phrase of currentPhrases.phrases; trackBy: trackByPhraseId">
-            <td>
-              <span class="badge bg-primary fs-6">{{ phrase.frequency }}x</span>
-            </td>
-            <td class="fw-bold text-primary">
-              {{ phrase.phrase }}
-            </td>
-            <td>
-              {{ phrase.hungarianMeaning }}
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- Bootstrap Pagination -->
-    <nav aria-label="Lapozás" *ngIf="totalPages > 1">
-      <ul class="pagination justify-content-center">
-        <!-- Első oldal -->
-        <li class="page-item" [class.disabled]="!canGoToPrevious()">
-          <button 
-            class="page-link" 
-            (click)="goToFirst()" 
-            [disabled]="!canGoToPrevious()"
-            title="Első oldal">
-            <i class="bi bi-chevron-double-left"></i>
-          </button>
-        </li>
-        
-        <!-- Előző oldal -->
-        <li class="page-item" [class.disabled]="!canGoToPrevious()">
-          <button 
-            class="page-link" 
-            (click)="goToPrevious()" 
-            [disabled]="!canGoToPrevious()"
-            title="Előző oldal">
-            <i class="bi bi-chevron-left"></i>
-          </button>
-        </li>
-        
-        <!-- Oldal számok -->
-        <li class="page-item" 
-            *ngFor="let page of getPageNumbers()" 
-            [class.active]="page === currentPage">
-          <button class="page-link" (click)="goToPage(page)">{{ page }}</button>
-        </li>
-        
-        <!-- Következő oldal -->
-        <li class="page-item" [class.disabled]="!canGoToNext()">
-          <button 
-            class="page-link" 
-            (click)="goToNext()" 
-            [disabled]="!canGoToNext()"
-            title="Következő oldal">
-            <i class="bi bi-chevron-right"></i>
-          </button>
-        </li>
-        
-        <!-- Utolsó oldal -->
-        <li class="page-item" [class.disabled]="!canGoToNext()">
-          <button 
-            class="page-link" 
-            (click)="goToLast()" 
-            [disabled]="!canGoToNext()"
-            title="Utolsó oldal">
-            <i class="bi bi-chevron-double-right"></i>
-          </button>
-        </li>
-      </ul>
-      
-      <!-- Pagination info -->
-      <div class="text-center mt-2">
+    <!-- Pagination -->
+    <div class="d-flex justify-content-center align-items-center" *ngIf="totalPages > 1">
+      <div class="d-flex align-items-center gap-3">
         <small class="text-muted">
-          {{ currentPage }}. oldal a {{ totalPages }}-ból | 
-          Összesen {{ totalItems }} kifejezés
+          {{ currentPage }}. oldal / {{ totalPages }}
         </small>
-      </div>
-    </nav>
-
-    <!-- Táblázat info -->
-    <div class="row mt-2">
-      <div class="col-12">
-        <small class="text-muted">
-          {{ currentPhrases.phrases.length }} kifejezés megjelenítve ezen az oldalon
-        </small>
+        
+        <nav aria-label="Lapozás">
+          <ul class="pagination pagination-sm mb-0">
+            <li class="page-item" [class.disabled]="!canGoToPrevious()">
+              <button class="page-link border" (click)="goToFirst()" [disabled]="!canGoToPrevious()">
+                ‹‹
+              </button>
+            </li>
+            <li class="page-item" [class.disabled]="!canGoToPrevious()">
+              <button class="page-link border" (click)="goToPrevious()" [disabled]="!canGoToPrevious()">
+                ‹
+              </button>
+            </li>
+            <li class="page-item" 
+                *ngFor="let page of getPageNumbers()" 
+                [class.active]="page === currentPage">
+              <button class="page-link border" (click)="goToPage(page)">{{ page }}</button>
+            </li>
+            <li class="page-item" [class.disabled]="!canGoToNext()">
+              <button class="page-link border" (click)="goToNext()" [disabled]="!canGoToNext()">
+                ›
+              </button>
+            </li>
+            <li class="page-item" [class.disabled]="!canGoToNext()">
+              <button class="page-link border" (click)="goToLast()" [disabled]="!canGoToNext()">
+                ››
+              </button>
+            </li>
+          </ul>
+        </nav>
       </div>
     </div>
   </div>
 
-  <!-- Ha nincs könyv kiválasztva -->
-  <div *ngIf="!selectedBookId" class="text-center mt-5">
-    <div class="alert alert-warning">
-      <i class="bi bi-info-circle me-2"></i>
-      Válassz egy könyvet a lista megjelenítéséhez.
+  <!-- Empty state -->
+  <div *ngIf="!selectedBookId" class="text-center py-5">
+    <div class="text-muted">
+      <i class="bi bi-book fs-1 d-block mb-3 opacity-50"></i>
+      <p class="mb-0">Válassz egy könyvet a szavak megjelenítéséhez</p>
     </div>
   </div>
 </div>
