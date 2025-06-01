@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Environment } from '../environment/enviroment';
@@ -30,7 +30,6 @@ export class BookService {
 	}
 
 
-
 	  getBookDetails(bookId: string): Observable<any> {
         return this.http.get(`${Environment.apiUrl}/api/PhraseStorage/list?bookId=${bookId}&page=1&pageSize=1`)
         .pipe(
@@ -44,6 +43,19 @@ export class BookService {
         );
     }
 
+
+	  updateBookTitle(bookId: string, newTitle: string): Observable<any> {
+        const token = localStorage.getItem('bookanalyzer-token'); 
+        const headers = new HttpHeaders({
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        });
+
+        return this.http.put(`${Environment.apiUrl}/api/Books/title/${bookId}`, 
+            { title: newTitle }, 
+            { headers }
+        );
+    }
 
 
 }
