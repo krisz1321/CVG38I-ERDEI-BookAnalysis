@@ -10,7 +10,8 @@ export class ApiService {
 	 router: Router
 
   	constructor(router: Router) { 
-		this.router = router;
+
+		 this.router = router;
 
 	}
 
@@ -22,7 +23,7 @@ export class ApiService {
 
 	public isAdmin() : boolean {
         
-        return false; // TODO implement admin check
+        return false; // TODO implement admin  check 
     }
 
 
@@ -32,6 +33,8 @@ export class ApiService {
             return false
         }
         return true
+
 	}
+
 
 }
