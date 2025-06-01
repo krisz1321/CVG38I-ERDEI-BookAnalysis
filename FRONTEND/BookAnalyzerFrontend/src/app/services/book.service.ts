@@ -29,4 +29,21 @@ export class BookService {
 		);
 	}
 
+
+
+	  getBookDetails(bookId: string): Observable<any> {
+        return this.http.get(`${Environment.apiUrl}/api/PhraseStorage/list?bookId=${bookId}&page=1&pageSize=1`)
+        .pipe(
+            map((response: any) => {
+                return {
+                    id: bookId,
+                    title: response.bookTitle,
+                    totalWords: response.pageInfo?.totalItems || 0
+                };
+            })
+        );
+    }
+
+
+
 }

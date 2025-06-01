@@ -8,23 +8,86 @@
       <div class="card h-100 book-card">
         <div class="card-body d-flex flex-column">
           <h5 class="card-title">{{ book.title }}</h5>
-            <div class="d-flex justify-content-between align-items-center">
-              <button type="button" class="btn btn-primary btn-sm">
-                <i class="bi bi-eye me-1"></i>
-                Részletek
-              </button>
-              <button type="button" class="btn btn-outline-secondary btn-sm">
-                <i class="bi bi-pencil me-1"></i>
-                Szerkesztés
-              </button>
+          
+          <!-- Részletek panel (ha nyitva) -->
+          <div *ngIf="isBookExpanded(book.id)" class="mt-3">
+            <div *ngIf="getBookDetails(book.id)" class="border-top pt-3">
+              <!-- Ha van hiba -->
+              <div *ngIf="getBookDetails(book.id).error" class="alert alert-danger">
+                <i class="bi bi-exclamation-triangle me-2"></i>
+                {{ getBookDetails(book.id).error }}
+              </div>
+              
+              <!-- Ha sikeres -->
+              <div *ngIf="!getBookDetails(book.id).error">
+                <div class="alert alert-info">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <strong>Könyv ID:</strong><br>
+                      {{ getBookDetails(book.id).id }}
+                    </div>
+                    <div class="col-md-6">
+                      <strong>Összesen szavak:</strong><br>
+                      {{ getBookDetails(book.id).totalWords }}
+                    </div>
+                  </div>
+                  <div class="row mt-2">
+                    <div class="col-12">
+                      <strong>Teljes cím:</strong><br>
+                      {{ getBookDetails(book.id).title }}
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
+            
+            <!-- Loading  -->
+            <div *ngIf="!getBookDetails(book.id)" class="text-center p-3">
+              <div class="spinner-border spinner-border-sm text-primary" role="status">
+                <span class="visually-hidden">Betöltés...</span>
+              </div>
+              <p class="mt-2 mb-0">Részletek betöltése...</p>
+            </div>
+          </div>
+          
+          <div class="d-flex justify-content-between align-items-center mt-auto">
+            <button 
+              type="button" 
+              class="btn btn-sm"
+              [class.btn-primary]="!isBookExpanded(book.id)"
+              [class.btn-secondary]="isBookExpanded(book.id)"
+              (click)="toggleBookDetails(book.id)">
+              <i class="bi me-1" [class.bi-eye]="!isBookExpanded(book.id)" [class.bi-eye-slash]="isBookExpanded(book.id)"></i>
+              {{ isBookExpanded(book.id) ? 'Elrejtés' : 'Részletek' }}
+            </button>
+            <button type="button" class="btn btn-outline-secondary btn-sm">
+              <i class="bi bi-pencil me-1"></i>
+              Szerkesztés
+            </button>
           </div>
         </div>
       </div>
     </div>
   </div>
   
+  <!-- Loading  -->
+  <div *ngIf="isLoading" class="text-center mt-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Betöltés...</span>
+    </div>
+  </div>
+
+  <!-- Error  -->
+  <div *ngIf="errorMessage" class="alert alert-danger mt-4">
+    <i class="bi bi-exclamation-triangle me-2"></i>
+    {{ errorMessage }}
+    <button class="btn btn-outline-danger btn-sm ms-2" (click)="retry()">
+      Újrapróbálás
+    </button>
+  </div>
+
   <!-- Ha nincs könyv -->
-  <div *ngIf="books.length === 0" class="text-center mt-5">
+  <div *ngIf="books.length === 0 && !isLoading" class="text-center mt-5">
     <p class="text-muted">Nincsenek könyvek a listában.</p>
   </div>
+</div>
