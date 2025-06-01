@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using BookAnalysisApp.Data;
 using BookAnalysisApp.Entities;
+using BookAnalysisApp.Entities.Dtos.Library;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BookAnalysisApp.Endpoint.Controllers
 {
@@ -79,9 +81,7 @@ namespace BookAnalysisApp.Endpoint.Controllers
 
             // Return the list of books
             return Ok(books);
-        }
-
-        [HttpGet("GetBookTitles")]
+        }        [HttpGet("GetBookTitles")]
         public async Task<IActionResult> GetBookTitles()
         {
             // Retrieve only the Id and Title of books from the database
@@ -95,6 +95,50 @@ namespace BookAnalysisApp.Endpoint.Controllers
 
             // Return the list of book titles
             return Ok(bookTitles);
+        }
+
+        [HttpPut("title/{id}")]
+        [Authorize]
+        public async Task<IActionResult> UpdateBookTitle(Guid id, [FromBody] UpdateBookTitleRequest request)
+        {
+            // Validate the request
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            // Check if title is not empty or whitespace
+            if (string.IsNullOrWhiteSpace(request.Title))
+            {
+                return BadRequest("Book title cannot be empty or whitespace.");
+            }
+
+            // Find the book by ID
+            var book = await _context.Books.FirstOrDefaultAsync(b => b.Id == id);
+            if (book == null)
+            {
+                return NotFound($"Book with ID {id} not found.");
+            }
+
+            // Update the title
+            book.Title = request.Title.Trim();            try
+            {
+                // Save changes to database
+                await _context.SaveChangesAsync();
+
+                // Return updated book information
+                return Ok(new
+                {
+                    book.Id,
+                    book.Title,
+                    Message = "Book title updated successfully."
+                });
+            }
+            catch
+            {
+                // Log the exception (in a real application, use proper logging)
+                return StatusCode(500, "An error occurred while updating the book title.");
+            }
         }
     }
 }
