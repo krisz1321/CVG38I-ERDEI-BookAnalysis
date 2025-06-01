@@ -1,1 +1,135 @@
-<p>register works!</p>
+<app-navigation></app-navigation>
+
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+      <div class="card shadow">
+        <div class="card-header bg-primary text-white text-center">
+          <h4 class="mb-0">
+            <i class="bi bi-person-plus me-2"></i>
+            Regisztráció
+          </h4>
+        </div>
+        <div class="card-body p-4">
+          
+          <!-- Siker üzenet -->
+          <div *ngIf="successMessage" class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle me-2"></i>
+            {{ successMessage }}
+          </div>
+
+          <!-- Hiba üzenet -->
+          <div *ngIf="errorMessage" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="bi bi-exclamation-triangle me-2"></i>
+            {{ errorMessage }}
+          </div>
+
+          <form (ngSubmit)="sendRegisterCredentials()" #registerForm="ngForm">
+            
+            <!-- Felhasználónév -->
+            <div class="d-flex flex-row align-items-center mb-4">
+              <i class="bi bi-person-fill fa-lg me-3 text-primary" style="width: 20px;"></i>
+              <div class="flex-fill">
+                <label class="form-label" for="username">Felhasználónév</label>
+                <input 
+                  type="text" 
+                  id="username" 
+                  name="username"
+                  class="form-control"
+                  [class.is-invalid]="userName.invalid && userName.touched"
+                  [class.is-valid]="userName.valid && userName.touched"
+                  [(ngModel)]="registerModel.userName"
+                  [formControl]="userName"
+                  placeholder="Minimum 3 karakter"
+                  required />
+                <div *ngIf="userName.invalid && userName.touched" class="invalid-feedback d-block">
+                  {{ getUserNameErrorMessage() }}
+                </div>
+              </div>
+            </div>
+
+            <!-- Jelszó -->
+            <div class="d-flex flex-row align-items-center mb-4">
+              <i class="bi bi-lock-fill fa-lg me-3 text-primary" style="width: 20px;"></i>
+              <div class="flex-fill">
+                <label class="form-label" for="password">Jelszó</label>
+                <input 
+                  type="password" 
+                  id="password" 
+                  name="password"
+                  class="form-control"
+                  [class.is-invalid]="password.invalid && password.touched"
+                  [class.is-valid]="password.valid && password.touched"
+                  [(ngModel)]="registerModel.password"
+                  [formControl]="password"
+                  placeholder="Minimum 6 karakter"
+                  required />
+                <div *ngIf="password.invalid && password.touched" class="invalid-feedback d-block">
+                  {{ getPasswordErrorMessage() }}
+                </div>
+              </div>
+            </div>
+
+            <!-- Jelszó megerősítése -->
+            <div class="d-flex flex-row align-items-center mb-4">
+              <i class="bi bi-key-fill fa-lg me-3 text-primary" style="width: 20px;"></i>
+              <div class="flex-fill">
+                <label class="form-label" for="confirmPassword">Jelszó megerősítése</label>
+                <input 
+                  type="password" 
+                  id="confirmPassword" 
+                  name="confirmPassword"
+                  class="form-control"
+                  [class.is-invalid]="confirmPassword.invalid && confirmPassword.touched"
+                  [class.is-valid]="confirmPassword.valid && confirmPassword.touched && registerModel.password === confirmPasswordValue"
+                  [(ngModel)]="confirmPasswordValue"
+                  [formControl]="confirmPassword"
+                  placeholder="Jelszó ismétlése"
+                  required />
+                <div *ngIf="confirmPassword.invalid && confirmPassword.touched" class="invalid-feedback d-block">
+                  {{ getConfirmPasswordErrorMessage() }}
+                </div>
+              </div>
+            </div>
+
+            <!-- Feltételek elfogadása -->
+            <div class="form-check d-flex justify-content-center mb-4">
+              <input 
+                class="form-check-input me-2" 
+                type="checkbox" 
+                [(ngModel)]="acceptTermsAndConditions"
+                name="terms"
+                id="termsCheck" />
+              <label class="form-check-label" for="termsCheck">
+                Elfogadom az 
+                <a href="#!" class="text-primary text-decoration-none">Általános Szerződési Feltételeket</a>
+              </label>
+            </div>
+
+            <!-- Regisztráció gomb -->
+            <div class="d-grid gap-2">
+              <button 
+                type="submit" 
+                class="btn btn-primary btn-lg btn-block"
+                [disabled]="!checkInputs() || isLoading">
+                <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                <i *ngIf="!isLoading" class="bi bi-person-check me-2"></i>
+                {{ isLoading ? 'Regisztráció...' : 'Regisztráció' }}
+              </button>
+            </div>
+
+            <!-- Bejelentkezés link -->
+            <div class="text-center mt-4">
+              <p class="mb-0">
+                Már van fiókja? 
+                <a [routerLink]="['/login']" class="text-primary text-decoration-none fw-bold">
+                  Bejelentkezés
+                </a>
+              </p>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
