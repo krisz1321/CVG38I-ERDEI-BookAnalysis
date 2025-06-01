@@ -11,7 +11,7 @@
   <!-- Controls Card -->
   <div class="card shadow-sm border mb-4">
     <div class="card-body p-4">
-      <div class="row align-items-end">
+     <div class="row align-items-end">
         <!-- Book selector -->
         <div class="col-md-6 mb-3 mb-md-0">
           <label for="bookSelect" class="form-label small text-muted mb-2"
@@ -31,15 +31,13 @@
         </div>
 
         <!-- Page size selector -->
-        <div class="col-md-3" *ngIf="selectedBookId">
-          <label for="pageSize" class="form-label small text-muted mb-2"
-            >Elemek/oldal</label
-          >
+        <div class="col-md-3 mb-3 mb-md-0" *ngIf="selectedBookId">
+          <label for="pageSize" class="form-label small text-muted mb-2">Elemek/oldal</label>
           <select
             id="pageSize"
             class="form-select border bg-light"
-            [value]="pageSize"
-            (change)="changePageSize(+$any($event.target).value)"
+            [(ngModel)]="pageSize"
+            (change)="changePageSize(pageSize)"
           >
             <option *ngFor="let size of getPageSizeOptions()" [value]="size">
               {{ size }}
