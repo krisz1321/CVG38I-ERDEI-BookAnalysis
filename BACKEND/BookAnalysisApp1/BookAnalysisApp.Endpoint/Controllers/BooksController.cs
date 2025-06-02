@@ -140,5 +140,36 @@ namespace BookAnalysisApp.Endpoint.Controllers
                 return StatusCode(500, "An error occurred while updating the book title.");
             }
         }
+
+        [HttpDelete("{id}")]
+        [Authorize]
+        public async Task<IActionResult> DeleteBook(Guid id)
+        {
+            try
+            {
+                // Find the book by ID
+                var book = await _context.Books.FirstOrDefaultAsync(b => b.Id == id);
+                if (book == null)
+                {
+                    return NotFound($"Book with ID {id} not found.");
+                }
+
+                // Remove the book from the database
+                _context.Books.Remove(book);
+                await _context.SaveChangesAsync();
+
+                // Return success message
+                return Ok(new
+                {
+                    Id = id,
+                    Message = "Book deleted successfully."
+                });
+            }
+            catch
+            {
+                // Log the exception (in a real application, use proper logging)
+                return StatusCode(500, "An error occurred while deleting the book.");
+            }
+        }
     }
 }
