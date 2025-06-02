@@ -20,6 +20,18 @@
             Főoldal
           </a>
         </li>
+		  <li class="nav-item">
+          <a
+            class="nav-link"
+            routerLink="/add-book"
+            routerLinkActive="active"
+			*ngIf="this.api.isLoggedIn()"
+          >
+		  <i class="bi bi-cloud-upload me-1"></i>
+            Új könyv
+          </a>
+        </li>
+		
         <li class="nav-item">
           <a
             class="nav-link"
@@ -58,7 +70,7 @@
             routerLinkActive="active"
             *ngIf="this.api.isLoggedIn()"
           >
-            <i class="bi bi-bookmark-star me-1"></i>
+            <i class="bi bi-bar-chart me-1"></i>
             Statisztika
           </a>
         </li>
