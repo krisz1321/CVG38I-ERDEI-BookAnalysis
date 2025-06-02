@@ -1,1 +1,22 @@
-<p>statistic works!</p>
+<app-navigation></app-navigation>
+
+<div class="container mt-4">
+  <h2 class="text-center mb-4">Elmúlt 2 hét tanulási statisztikája</h2>
+
+  <div id="flex-container">
+    <div *ngFor="let day of dailyStats" 
+         [style.height.%]="columnHeight(day.learnedCount)"
+         [style.background-color]="randomColor()">
+      {{ day.learnedCount }}
+    </div>
+  </div>
+
+  <div class="legend-container">
+    @for (day of dailyStats; track day.date; let idx=$index) {
+      <div class="legend-item">
+        <div class="legend" [style.background-color]="columnColors[idx]"></div>
+        <span class="legend-text">{{ day.dayName }}</span>
+      </div>
+    }
+  </div>
+</div>
