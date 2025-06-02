@@ -1,4 +1,3 @@
-
 export interface BookDto {
   id: string;
   title: string;
@@ -15,8 +14,8 @@ export class BookTitles implements BookTitleDto {
   title: string;
 
   constructor() {
-	this.id = '';
-	this.title = '';
+    this.id = '';
+    this.title = '';
   }
 }
 
@@ -26,8 +25,8 @@ export class Books implements BookDto {
   content: string;
 
   constructor() {
-	this.id = '';
-	this.title = '';
-	this.content = '';
+    this.id = '';
+    this.title = '';
+    this.content = '';
   }
 }

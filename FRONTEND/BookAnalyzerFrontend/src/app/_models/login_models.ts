@@ -1,13 +1,12 @@
 export class LoginModel implements LoginDto {
-    public userName:string = ""
-    public password:string = ""
+  public userName: string = '';
+  public password: string = '';
 }
 
 export interface LoginDto {
   userName: string;
   password: string;
 }
-
 
 export interface UserInputDto {
   userName: string;

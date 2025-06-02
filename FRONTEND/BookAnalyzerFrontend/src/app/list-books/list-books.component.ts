@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { NavigationComponent } from "../navigation/navigation.component";
+import { NavigationComponent } from '../navigation/navigation.component';
 import { BookTitles } from '../_models/book_models';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { BookService } from '../services/book.service';
-import { FormsModule } from '@angular/forms'; 
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-list-books',
@@ -13,21 +13,18 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './list-books.component.scss',
   providers: [BookService],
 })
-
 export class ListBooksComponent implements OnInit {
-
   books: Array<BookTitles> = [];
   isLoading: boolean = false;
   errorMessage: string = '';
-  expandedBookIds: Set<string> = new Set(); 
-  bookDetails: { [key: string]: any } = {}; 
-    
+  expandedBookIds: Set<string> = new Set();
+  bookDetails: { [key: string]: any } = {};
 
- editingBookId: string = '';
+  editingBookId: string | null = null;
   editTitle: string = '';
   isSaving: boolean = false;
-
-  constructor(private bookService: BookService) { }
+  isDeleting = false;
+  constructor(private bookService: BookService) {}
 
   ngOnInit(): void {
     this.loadBooks();
@@ -36,9 +33,9 @@ export class ListBooksComponent implements OnInit {
   loadBooks(): void {
     this.isLoading = true;
     this.errorMessage = '';
-    
+
     this.bookService.getBookTitles().subscribe(
-      books => {
+      (books) => {
         this.books = books;
         this.isLoading = false;
       },
@@ -53,13 +50,13 @@ export class ListBooksComponent implements OnInit {
     this.loadBooks();
   }
 
-  // Toggle funkció 
+  // Toggle funkció
   toggleBookDetails(bookId: string): void {
     if (this.expandedBookIds.has(bookId)) {
       this.expandedBookIds.delete(bookId);
     } else {
       this.expandedBookIds.add(bookId);
-    
+
       if (!this.bookDetails[bookId]) {
         this.loadBookDetails(bookId);
       }
@@ -74,22 +71,22 @@ export class ListBooksComponent implements OnInit {
       },
       (error: any) => {
         console.error('Error loading book details:', error);
-        this.bookDetails[bookId] = { error: 'Hiba történt az adatok betöltése során.' };
+        this.bookDetails[bookId] = {
+          error: 'Hiba történt az adatok betöltése során.',
+        };
       }
     );
   }
 
-  
   isBookExpanded(bookId: string): boolean {
     return this.expandedBookIds.has(bookId);
   }
 
-  
   getBookDetails(bookId: string): any {
     return this.bookDetails[bookId];
   }
 
-startEdit(book: BookTitles): void {
+  startEdit(book: BookTitles): void {
     this.editingBookId = book.id;
     this.editTitle = book.title;
   }
@@ -106,40 +103,70 @@ startEdit(book: BookTitles): void {
       return;
     }
 
+    if (!this.editingBookId) {
+      alert('Nincs kiválasztott könyv!');
+      return;
+    }
+
     this.isSaving = true;
 
-    this.bookService.updateBookTitle(this.editingBookId, this.editTitle.trim()).subscribe(
-      (response: any) => {
-        // Könyv címének frissítése a listában
-        const book = this.books.find(b => b.id === this.editingBookId);
-        if (book) {
-          book.title = this.editTitle.trim();
-        }
-        
-        
-        if (this.bookDetails[this.editingBookId]) {
-          this.bookDetails[this.editingBookId].title = this.editTitle.trim();
-        }
+    this.bookService
+      .updateBookTitle(this.editingBookId, this.editTitle.trim())
+      .subscribe(
+        (response: any) => {
+          // Null ellenőrzés itt is
+          if (!this.editingBookId) return;
 
-        this.cancelEdit();
-        this.isSaving = false;
-      },
-      (error: any) => {
-        console.error('Error updating book title:', error);
-        alert('Hiba történt a mentés során!');
-        this.isSaving = false;
-      }
-    );
+          // Könyv címének frissítése a listában
+          const book = this.books.find((b) => b.id === this.editingBookId);
+          if (book) {
+            book.title = this.editTitle.trim();
+          }
+
+          if (this.bookDetails[this.editingBookId]) {
+            this.bookDetails[this.editingBookId].title = this.editTitle.trim();
+          }
+
+          this.cancelEdit();
+          this.isSaving = false;
+        },
+        (error: any) => {
+          console.error('Error updating book title:', error);
+          alert('Hiba történt a mentés során!');
+          this.isSaving = false;
+        }
+      );
   }
 
   isEditing(bookId: string): boolean {
     return this.editingBookId === bookId;
   }
+
+  deleteBook(bookId: string) {
+    if (
+      !confirm(
+        'Biztosan törölni szeretnéd ezt a könyvet? Ez a művelet nem visszavonható!'
+      )
+    ) {
+      return;
+    }
+
+    this.isDeleting = true;
+
+    this.bookService.deleteBook(bookId).subscribe(
+      (result) => {
+        // Könyv eltávolítása
+        this.books = this.books.filter((book) => book.id !== bookId);
+        this.isDeleting = false;
+        this.editingBookId = null;
+
+        //console.log('Könyv sikeresen törlés');
+      },
+      (error) => {
+        this.isDeleting = false;
+        this.errorMessage = 'Hiba történt a könyv törlése során!';
+        console.error('Törlési hiba:', error);
+      }
+    );
+  }
 }
-
-
-
-
-
- 
-

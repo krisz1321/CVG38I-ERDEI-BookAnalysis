@@ -12,7 +12,7 @@
             <h5 class="card-title">{{ book.title }}</h5>
           </div>
 
-          <!-- Szerkesztési mód -->
+          <!-- Szerkesztés -->
           <div *ngIf="isEditing(book.id)" class="mb-3">
             <label class="form-label">Könyv címe:</label>
             <input
@@ -34,6 +34,20 @@
                 ></span>
                 {{ isSaving ? "Mentés..." : "Mentés" }}
               </button>
+
+              <!-- Törlés -->
+              <button
+                class="btn btn-danger btn-sm"
+                [disabled]="isSaving"
+                (click)="deleteBook(book.id)"
+              >
+                <span
+                  *ngIf="isDeleting"
+                  class="spinner-border spinner-border-sm me-1"
+                ></span>
+                {{ isDeleting ? "Törlés..." : "Törlés" }}
+              </button>
+
               <button
                 class="btn btn-secondary btn-sm"
                 [disabled]="isSaving"

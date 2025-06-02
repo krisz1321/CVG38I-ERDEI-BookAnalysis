@@ -1,8 +1,8 @@
 export class RegisterModel {
-    public userName: string = ''
-    public password: string = ''
-    public firstName?: string = ''
-    public lastName?: string = ''
+  public userName: string = '';
+  public password: string = '';
+  public firstName?: string = '';
+  public lastName?: string = '';
 }
 
 export interface UserInputDto {
@@ -11,4 +11,3 @@ export interface UserInputDto {
   firstName?: string;
   lastName?: string;
 }
-

@@ -6,7 +6,6 @@
 
   <div class="card">
     <div class="card-body">
-
       <div class="mb-3">
         <label class="form-label">Könyv címe:</label>
         <input
@@ -16,7 +15,6 @@
           placeholder="Add meg a könyv címét"
         />
       </div>
-
 
       <div class="mb-3">
         <label class="form-label">Könyv tartalma:</label>
@@ -29,16 +27,14 @@
         </textarea>
       </div>
 
-  
       <button
         class="btn btn-primary"
         (click)="uploadBook()"
         [disabled]="isLoading"
       >
-	  	Könyv feltöltése és elemzése
+        Könyv feltöltése és elemzése
       </button>
 
- 
       <div
         *ngIf="message"
         class="alert mt-3"
@@ -51,7 +47,6 @@
           class="spinner-border spinner-border-sm me-2"
         ></span>
         {{ message }}
-
       </div>
     </div>
   </div>

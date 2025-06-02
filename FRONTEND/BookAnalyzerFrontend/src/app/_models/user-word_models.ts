@@ -27,5 +27,3 @@ export interface FavoriteWordDto {
 export interface AddFavoriteWordDto {
   dictionaryEntryId: string;
 }
-
-
