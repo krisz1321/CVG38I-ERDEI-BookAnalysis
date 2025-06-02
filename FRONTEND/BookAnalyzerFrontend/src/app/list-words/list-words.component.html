@@ -1,18 +1,18 @@
 <app-navigation></app-navigation>
 
 <div class="container-fluid py-4">
-  <!-- Header -->
+  <!-- Fejléc -->
   <div class="row mb-4">
     <div class="col-12">
       <h1 class="h3 text-muted fw-light">{{ massage }}</h1>
     </div>
   </div>
 
-  <!-- Controls Card -->
+  <!-- Vezérlő kártya -->
   <div class="card shadow-sm border mb-4">
     <div class="card-body p-4">
       <div class="row align-items-end">
-        <!-- Book selector -->
+        <!-- Könyv választó -->
         <div class="col-md-6 mb-3 mb-md-0">
           <label for="bookSelect" class="form-label small text-muted mb-2"
             >Könyv</label
@@ -30,7 +30,7 @@
           </select>
         </div>
 
-        <!-- Page size selector -->
+        <!-- Oldalméret választó -->
         <div class="col-md-3" *ngIf="selectedBookId">
           <label for="pageSize" class="form-label small text-muted mb-2"
             >Elemek/oldal</label
@@ -38,8 +38,8 @@
           <select
             id="pageSize"
             class="form-select border bg-light"
-            [value]="pageSize"
-            (change)="changePageSize(+$any($event.target).value)"
+            [(ngModel)]="pageSize"
+            (change)="changePageSize(pageSize)"
           >
             <option *ngFor="let size of getPageSizeOptions()" [value]="size">
               {{ size }}
@@ -47,7 +47,7 @@
           </select>
         </div>
 
-        <!-- Stats -->
+        <!-- Statisztikák -->
         <div
           class="col-md-3 text-end"
           *ngIf="selectedBookId && currentPhrases.phrases.length > 0"
@@ -61,9 +61,9 @@
     </div>
   </div>
 
-  <!-- Content -->
+  <!-- Tartalom -->
   <div *ngIf="selectedBookId && currentPhrases.phrases.length > 0">
-    <!-- Words Table -->
+    <!-- Szavak táblázat -->
     <div class="card shadow-sm border mb-4">
       <div class="table-responsive">
         <table class="table table-hover mb-0">
@@ -108,7 +108,7 @@
       </div>
     </div>
 
-    <!-- Pagination -->
+    <!-- Lapozás -->
     <div
       class="d-flex justify-content-center align-items-center"
       *ngIf="totalPages > 1"
@@ -171,7 +171,6 @@
     </div>
   </div>
 
-  <!-- Empty state -->
   <div *ngIf="!selectedBookId" class="text-center py-5">
     <div class="text-muted">
       <i class="bi bi-book fs-1 d-block mb-3 opacity-50"></i>
