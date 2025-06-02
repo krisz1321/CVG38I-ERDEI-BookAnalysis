@@ -67,50 +67,33 @@ export class UserWordService {
   }
 
   // MEGTANULT -->
-  getLearnedWords(): Observable<LearnedWordDto[]> {
-    return this.http.get<LearnedWordDto[]>(
-      `${this.apiUrl}/api/userwords/learned`,
-      {
-        headers: this.getAuthHeaders(),
-      }
-    );
+ getLearnedWords(): Observable<LearnedWordDto[]> {
+    return this.http.get<LearnedWordDto[]>(`${this.apiUrl}/api/userwords/learned`, {
+      headers: this.getAuthHeaders()
+    });
   }
 
   getLearnedWordById(id: string): Observable<LearnedWordDto> {
-    return this.http.get<LearnedWordDto>(
-      `${this.apiUrl}/api/userwords/learned/${id}`,
-      {
-        headers: this.getAuthHeaders(),
-      }
-    );
+    return this.http.get<LearnedWordDto>(`${this.apiUrl}/api/userwords/learned/${id}`, {
+      headers: this.getAuthHeaders()
+    });
   }
 
   addLearnedWord(dto: AddLearnedWordDto): Observable<LearnedWordDto> {
-    return this.http.post<LearnedWordDto>(
-      `${this.apiUrl}/api/userwords/learned`,
-      dto,
-      {
-        headers: this.getAuthHeaders(),
-      }
-    );
+    return this.http.post<LearnedWordDto>(`${this.apiUrl}/api/userwords/learned`, dto, {
+      headers: this.getAuthHeaders()
+    });
   }
 
   updateLastClick(id: string): Observable<void> {
-    return this.http.put<void>(
-      `${this.apiUrl}/api/userwords/learned/${id}/click`,
-      {},
-      {
-        headers: this.getAuthHeaders(),
-      }
-    );
+    return this.http.put<void>(`${this.apiUrl}/api/userwords/learned/${id}/click`, {}, {
+      headers: this.getAuthHeaders()
+    });
   }
 
   removeLearnedWord(id: string): Observable<void> {
-    return this.http.delete<void>(
-      `${this.apiUrl}/api/userwords/learned/${id}`,
-      {
-        headers: this.getAuthHeaders(),
-      }
-    );
+    return this.http.delete<void>(`${this.apiUrl}/api/userwords/learned/${id}`, {
+      headers: this.getAuthHeaders()
+    });
   }
 }

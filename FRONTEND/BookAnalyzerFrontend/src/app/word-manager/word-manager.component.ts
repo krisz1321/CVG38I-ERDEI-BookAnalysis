@@ -27,15 +27,19 @@ export class WordManagerComponent {
   books: Array<BookTitles> = [];
   selectedBookId: string = '';
 
-  // Pagination
+  //pagination
   currentPage: number = 1;
   pageSize: number = 25;
   totalItems: number = 0;
   totalPages: number = 0;
 
-  // Kedvencek kezelése
-  favoriteWords: string[] = []; // Dictionary ID-k listája
+  //kedvencek 
+  favoriteWords: string[] = []; // dictionary ID-k 
   loadingFavorites: boolean = false;
+ 
+  //ismert szavak 
+  learnedWords: string[] = []; // dictionary ID-k 
+  loadingLearned: boolean = false;
 
   constructor(
     private phraseService: PhraseService,
@@ -49,6 +53,7 @@ export class WordManagerComponent {
   ngOnInit(): void {
     this.loadBooks();
     this.loadFavoriteWords();
+	this.loadLearnedWords();
 
     // Pagination service feliratkozás
     this.paginationService.state$.subscribe((state) => {
@@ -294,4 +299,93 @@ export class WordManagerComponent {
       ? 'bi bi-heart-fill text-danger'
       : 'bi bi-heart text-muted';
   }
+
+
+
+  //ISMERT SZAVAK --->
+
+  loadLearnedWords(): void {
+    this.loadingLearned = true;
+    this.userWordService.getLearnedWords().subscribe(
+      (learnedWords) => {
+        this.learnedWords = learnedWords.map(l => l.dictionaryEntryId);
+        this.loadingLearned = false;
+        //console.log(`${this.componentName} Ismert szavak betöltve:`, this.learnedWords);
+      },
+      (error) => {
+        console.error(`${this.componentName} Hiba az ismert szavak betöltésekor:`, error);
+        this.learnedWords = [];
+        this.loadingLearned = false;
+      }
+    );
+  }
+
+  isLearned(phrase: Phrase): boolean {
+    return this.learnedWords.includes(phrase.id);
+  }
+
+  // Ismert állapot váltása
+  toggleLearned(phrase: Phrase): void {
+    if (this.loadingLearned) return;
+
+    const isLearned = this.isLearned(phrase);
+    
+    if (isLearned) {
+      this.removeLearnedWord(phrase);
+    } else {
+      this.addLearnedWord(phrase);
+    }
+  }
+
+  //hozzáadása
+  private addLearnedWord(phrase: Phrase): void {
+    const addDto = { dictionaryEntryId: phrase.id };
+    
+    this.userWordService.addLearnedWord(addDto).subscribe(
+      (result) => {
+        // Helyi lista frissítése
+        this.learnedWords.push(phrase.id);
+        console.log(`${this.componentName} "${phrase.phrase}" hozzáadva az ismert szavakhoz`);
+      },
+      (error) => {
+        console.error(`${this.componentName} Hiba az ismert szó hozzáadásakor:`, error);
+      }
+    );
+  }
+
+  //eltávolítás
+  private removeLearnedWord(phrase: Phrase): void {
+    // Először meg kell találni az ismert szó ID-jét
+    this.userWordService.getLearnedWords().subscribe(
+      (learnedWords) => {
+        const learnedWord = learnedWords.find(l => l.dictionaryEntryId === phrase.id);
+        if (learnedWord) {
+          this.userWordService.removeLearnedWord(learnedWord.id).subscribe(
+            () => {
+              // Helyi lista frissítése
+              this.learnedWords = this.learnedWords.filter(id => id !== phrase.id);
+              console.log(`${this.componentName} "${phrase.phrase}" eltávolítva az ismert szavakból`);
+            },
+            (error) => {
+              console.error(`${this.componentName} Hiba az ismert szó eltávolításakor:`, error);
+            }
+          );
+        }
+      },
+      (error) => {
+        console.error(`${this.componentName} Hiba az ismert szavak lekérésekor:`, error);
+      }
+    );
+  }
+
+  // Pipa ikon 
+  getCheckIconClass(phrase: Phrase): string {
+    if (this.loadingLearned) {
+      return 'bi bi-hourglass-split text-muted';
+    }
+    return this.isLearned(phrase) ? 'bi bi-check-square-fill text-success' : 'bi bi-check-square text-muted';
+  }
+
+
+
 }
