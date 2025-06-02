@@ -1,1 +1,58 @@
 <p>add-book works!</p>
+<app-navigation></app-navigation>
+
+<div class="container mt-4">
+  <h3>Könyv feltötlése</h3>
+
+  <div class="card">
+    <div class="card-body">
+
+      <div class="mb-3">
+        <label class="form-label">Könyv címe:</label>
+        <input
+          type="text"
+          class="form-control"
+          [(ngModel)]="title"
+          placeholder="Add meg a könyv címét"
+        />
+      </div>
+
+
+      <div class="mb-3">
+        <label class="form-label">Könyv tartalma:</label>
+        <textarea
+          class="form-control"
+          rows="10"
+          [(ngModel)]="content"
+          placeholder="A könyv tartalma (szövegként megadva)"
+        >
+        </textarea>
+      </div>
+
+  
+      <button
+        class="btn btn-primary"
+        (click)="uploadBook()"
+        [disabled]="isLoading"
+      >
+	  	Könyv feltöltése és elemzése
+      </button>
+
+ 
+      <div
+        *ngIf="message"
+        class="alert mt-3"
+        [class.alert-success]="isSuccess"
+        [class.alert-danger]="!isSuccess"
+        [class.alert-info]="isLoading"
+      >
+        <span
+          *ngIf="isLoading"
+          class="spinner-border spinner-border-sm me-2"
+        ></span>
+        {{ message }}
+
+      </div>
+    </div>
+  </div>
+</div>
