@@ -1,6 +1,6 @@
 import { Injectable, OnInit } from '@angular/core';
 import { Environment } from '../environment/enviroment';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Phrase } from '../_models/word_models';
 import { Phrases } from '../_models/word_models';
 import { Observable } from 'rxjs';
@@ -62,22 +62,38 @@ export class PhraseService {
     return messages[randomIndex];
   }
 
-
   isFavorite(phraseId: string): Observable<boolean> {
-    return this.http.get<boolean>(`${Environment.apiUrl}/api/userwords/favorites/${phraseId}`);
-	}
+    return this.http.get<boolean>(
+      `${Environment.apiUrl}/api/userwords/favorites/${phraseId}`
+    );
+  }
 
-	toggleFavorite(phraseId: string, isFavorite: boolean): Observable<any> {
+  toggleFavorite(phraseId: string, isFavorite: boolean): Observable<any> {
     if (isFavorite) {
-        // Hozzáadás
-        return this.http.post(`${Environment.apiUrl}/api/userwords/favorites/${phraseId}`, {});
+      // Hozzáadás
+      return this.http.post(
+        `${Environment.apiUrl}/api/userwords/favorites/${phraseId}`,
+        {}
+      );
     } else {
-		// Törlés
-        return this.http.delete(`${Environment.apiUrl}/api/userwords/favorites/${phraseId}`);
+      // Törlés
+      return this.http.delete(
+        `${Environment.apiUrl}/api/userwords/favorites/${phraseId}`
+      );
     }
-}
+  }
 
+  storeBookPhrases(bookId: string): Observable<any> {
+    const token = localStorage.getItem('bookanalyzer-token');
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    });
 
-
-
+    return this.http.post(
+      `${Environment.apiUrl}/api/PhraseStorage/store?bookId=${bookId}`,
+      {},
+      { headers }
+    );
+  }
 }

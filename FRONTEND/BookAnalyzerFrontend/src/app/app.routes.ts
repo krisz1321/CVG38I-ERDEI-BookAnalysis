@@ -8,6 +8,7 @@ import { RegisterComponent } from './register/register.component';
 import { LogoutComponent } from './logout/logout.component';
 import { WordManagerComponent } from './word-manager/word-manager.component';
 import { StatisticComponent } from './statistic/statistic.component';
+import { AddBookComponent } from './add-book/add-book.component';
 
 export const routes: Routes = [
 	{path: '', component: HomeComponent},
@@ -19,6 +20,7 @@ export const routes: Routes = [
 	{path: 'logout', component: LogoutComponent},
 	{path: 'word-manager', component: WordManagerComponent},
 	{path: 'statistic', component: StatisticComponent},
+	{path: 'add-book', component: AddBookComponent},
 
 	{path: '**', redirectTo: '', pathMatch: 'full'} 
 ];
