@@ -73,4 +73,15 @@ export class BookService {
       { headers }
     );
   }
+
+
+   deleteBook(bookId: string): Observable<any> {
+    const token = localStorage.getItem('bookanalyzer-token');
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    });
+
+    return this.http.delete(`${Environment.apiUrl}/api/Books/${bookId}`, { headers });
+  }
 }
