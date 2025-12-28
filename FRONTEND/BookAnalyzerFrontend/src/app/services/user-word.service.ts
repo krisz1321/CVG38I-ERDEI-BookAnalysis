@@ -1,21 +1,24 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Environment } from '../environment/enviroment';
 import {
   FavoriteWordDto,
   LearnedWordDto,
   AddFavoriteWordDto,
   AddLearnedWordDto,
 } from '../_models/user-word_models';
+import { ConfigService } from './config.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserWordService {
-  private apiUrl = Environment.apiUrl;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private configService: ConfigService) {}
+
+  private get categoryUrl(): string {
+    return `${this.configService.cfg.apiUrl}`;
+  }
 
   private getAuthHeaders(): HttpHeaders {
     const token = localStorage.getItem('bookanalyzer-token');
@@ -31,7 +34,7 @@ export class UserWordService {
 
   getFavorites(): Observable<FavoriteWordDto[]> {
     return this.http.get<FavoriteWordDto[]>(
-      `${this.apiUrl}/api/userwords/favorites`,
+      `${this.categoryUrl}/api/userwords/favorites`,
       {
         headers: this.getAuthHeaders(),
       }
@@ -40,7 +43,7 @@ export class UserWordService {
 
   getFavoriteById(id: string): Observable<FavoriteWordDto> {
     return this.http.get<FavoriteWordDto>(
-      `${this.apiUrl}/api/userwords/favorites/${id}`,
+      `${this.categoryUrl}/api/userwords/favorites/${id}`,
       {
         headers: this.getAuthHeaders(),
       }
@@ -49,7 +52,7 @@ export class UserWordService {
 
   addFavorite(dto: AddFavoriteWordDto): Observable<FavoriteWordDto> {
     return this.http.post<FavoriteWordDto>(
-      `${this.apiUrl}/api/userwords/favorites`,
+      `${this.categoryUrl}/api/userwords/favorites`,
       dto,
       {
         headers: this.getAuthHeaders(),
@@ -59,7 +62,7 @@ export class UserWordService {
 
   removeFavorite(id: string): Observable<void> {
     return this.http.delete<void>(
-      `${this.apiUrl}/api/userwords/favorites/${id}`,
+      `${this.categoryUrl}/api/userwords/favorites/${id}`,
       {
         headers: this.getAuthHeaders(),
       }
@@ -68,31 +71,31 @@ export class UserWordService {
 
   // MEGTANULT -->
  getLearnedWords(): Observable<LearnedWordDto[]> {
-    return this.http.get<LearnedWordDto[]>(`${this.apiUrl}/api/userwords/learned`, {
+    return this.http.get<LearnedWordDto[]>(`${this.categoryUrl}/api/userwords/learned`, {
       headers: this.getAuthHeaders()
     });
   }
 
   getLearnedWordById(id: string): Observable<LearnedWordDto> {
-    return this.http.get<LearnedWordDto>(`${this.apiUrl}/api/userwords/learned/${id}`, {
+    return this.http.get<LearnedWordDto>(`${this.categoryUrl}/api/userwords/learned/${id}`, {
       headers: this.getAuthHeaders()
     });
   }
 
   addLearnedWord(dto: AddLearnedWordDto): Observable<LearnedWordDto> {
-    return this.http.post<LearnedWordDto>(`${this.apiUrl}/api/userwords/learned`, dto, {
+    return this.http.post<LearnedWordDto>(`${this.categoryUrl}/api/userwords/learned`, dto, {
       headers: this.getAuthHeaders()
     });
   }
 
   updateLastClick(id: string): Observable<void> {
-    return this.http.put<void>(`${this.apiUrl}/api/userwords/learned/${id}/click`, {}, {
+    return this.http.put<void>(`${this.categoryUrl}/api/userwords/learned/${id}/click`, {}, {
       headers: this.getAuthHeaders()
     });
   }
 
   removeLearnedWord(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/api/userwords/learned/${id}`, {
+    return this.http.delete<void>(`${this.categoryUrl}/api/userwords/learned/${id}`, {
       headers: this.getAuthHeaders()
     });
   }

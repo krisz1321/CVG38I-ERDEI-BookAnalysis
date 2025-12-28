@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Environment } from '../environment/enviroment';
 import { BookDto, BookTitles } from '../_models/book_models';
+import { ConfigService } from './config.service';
 
 @Injectable({
   providedIn: 'root',
@@ -11,13 +11,19 @@ import { BookDto, BookTitles } from '../_models/book_models';
 export class BookService {
   http: HttpClient;
 
-  constructor(http: HttpClient) {
+  constructor(http: HttpClient, private configService: ConfigService) {
     this.http = http;
+  }
+
+	private get categoryUrl(): string {
+	console.log('ConfigService API URL!!!!!!!!!!!!:' + this.configService.cfg.apiUrl);
+
+	return `${this.configService.cfg.apiUrl}`;
   }
 
   getBookTitles(): Observable<Array<BookTitles>> {
     return this.http
-      .get<Array<BookDto>>(`${Environment.apiUrl}/api/Books/GetBookTitles`)
+      .get<Array<BookDto>>(`${this.categoryUrl}/api/Books/GetBookTitles`)
       .pipe(
         map((response) =>
           response.map((bookDto) => {
@@ -33,7 +39,7 @@ export class BookService {
   getBookDetails(bookId: string): Observable<any> {
     return this.http
       .get(
-        `${Environment.apiUrl}/api/PhraseStorage/list?bookId=${bookId}&page=1&pageSize=1`
+        `${this.categoryUrl}/api/PhraseStorage/list?bookId=${bookId}&page=1&pageSize=1`
       )
       .pipe(
         map((response: any) => {
@@ -54,7 +60,7 @@ export class BookService {
     });
 
     return this.http.put(
-      `${Environment.apiUrl}/api/Books/title/${bookId}`,
+      `${this.categoryUrl}/api/Books/title/${bookId}`,
       { title: newTitle },
       { headers }
     );
@@ -68,7 +74,7 @@ export class BookService {
     });
 
     return this.http.post(
-      `${Environment.apiUrl}/api/Books/uploadAndEdit?removeNonAlphabetic=true&toLowerCase=true`,
+      `${this.categoryUrl}/api/Books/uploadAndEdit?removeNonAlphabetic=true&toLowerCase=true`,
       book,
       { headers }
     );
@@ -81,7 +87,7 @@ export class BookService {
       Authorization: `Bearer ${token}`,
     });
 
-    return this.http.delete(`${Environment.apiUrl}/api/Books/${bookId}`, {
+    return this.http.delete(`${this.categoryUrl}/api/Books/${bookId}`, {
       headers,
     });
   }
