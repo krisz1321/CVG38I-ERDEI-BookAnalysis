@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { FormControl, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { RegisterModel } from '../_models/register_models';
-import { Environment } from '../environment/enviroment';
+import { environment } from '../../environments/environment';
 import { NavigationComponent } from "../navigation/navigation.component";
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -88,7 +88,7 @@ export class RegisterComponent implements OnInit {
     this.errorMessage = '';
     this.successMessage = '';
 
-    this.http.post(`${Environment.apiUrl}/api/User/register`, this.registerModel)
+    this.http.post(`${environment.apiUrl}/api/User/register`, this.registerModel)
       .subscribe(
         (success) => {
           this.isLoading = false;

@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { LoginModel } from '../_models/login_models';
-import { Environment } from '../environment/enviroment';
+import { environment } from '../../environments/environment';
 import { NavigationComponent } from '../navigation/navigation.component';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -68,7 +68,7 @@ export class LoginComponent {
     this.isLoading = true;
 
     this.http
-      .post<TokenModel>(`${Environment.apiUrl}/api/User/login`, this.loginModel)
+      .post<TokenModel>(`${environment.apiUrl}/api/User/login`, this.loginModel)
       .subscribe(
         (success) => {
           // Token localStorage
