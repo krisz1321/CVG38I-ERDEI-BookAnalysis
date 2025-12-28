@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { FormControl, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { RegisterModel } from '../_models/register_models';
-import { environment } from '../../environments/environment';
+import { ConfigService } from '../services/config.service';
 import { NavigationComponent } from "../navigation/navigation.component";
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -34,7 +34,7 @@ export class RegisterComponent implements OnInit {
   errorMessage: string = '';
   confirmPasswordValue: string = '';
 
-  constructor(http: HttpClient, router: Router) {
+  constructor(http: HttpClient, router: Router, private configService: ConfigService) {
     this.http = http;
     this.router = router;
     this.acceptTermsAndConditions = false;
@@ -47,6 +47,11 @@ export class RegisterComponent implements OnInit {
   }
 
   ngOnInit(): void {
+  }
+
+  private get apiUrl(): string {
+    console.log('ConfigService API URL!!!!!!!!!!!!:' + this.configService.cfg.apiUrl);
+    return `${this.configService.cfg.apiUrl}`;
   }
 
   public getUserNameErrorMessage(): string {
@@ -88,7 +93,7 @@ export class RegisterComponent implements OnInit {
     this.errorMessage = '';
     this.successMessage = '';
 
-    this.http.post(`${environment.apiUrl}/api/User/register`, this.registerModel)
+    this.http.post(`${this.apiUrl}/api/User/register`, this.registerModel)
       .subscribe(
         (success) => {
           this.isLoading = false;

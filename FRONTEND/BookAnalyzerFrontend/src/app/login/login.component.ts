@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { LoginModel } from '../_models/login_models';
-import { environment } from '../../environments/environment';
+import { ConfigService } from '../services/config.service';
 import { NavigationComponent } from '../navigation/navigation.component';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -34,12 +34,17 @@ export class LoginComponent {
   successMessage: string = '';
   isLoading: boolean = false;
 
-  constructor(http: HttpClient, router: Router) {
+  constructor(http: HttpClient, router: Router, private configService: ConfigService) {
     this.http = http;
     this.router = router;
     this.loginModel = new LoginModel();
     this.userName = new FormControl('', [Validators.required, Validators.minLength(3)]);
     this.password = new FormControl('', [Validators.required]);
+  }
+
+  private get apiUrl(): string {
+    console.log('ConfigService API URL!!!!!!!!!!!!:' + this.configService.cfg.apiUrl);
+    return `${this.configService.cfg.apiUrl}`;
   }
 
   public getUserNameErrorMessage(): string {
@@ -68,7 +73,7 @@ export class LoginComponent {
     this.isLoading = true;
 
     this.http
-      .post<TokenModel>(`${environment.apiUrl}/api/User/login`, this.loginModel)
+      .post<TokenModel>(`${this.apiUrl}/api/User/login`, this.loginModel)
       .subscribe(
         (success) => {
           // Token localStorage
