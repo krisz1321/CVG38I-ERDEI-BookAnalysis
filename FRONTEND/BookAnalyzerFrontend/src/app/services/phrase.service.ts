@@ -1,9 +1,9 @@
 import { Injectable, OnInit } from '@angular/core';
-import { Environment } from '../environment/enviroment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Phrase } from '../_models/word_models';
 import { Phrases } from '../_models/word_models';
 import { Observable } from 'rxjs';
+import { ConfigService } from './config.service';
 
 @Injectable({
   providedIn: 'root',
@@ -12,7 +12,7 @@ export class PhraseService {
   http: HttpClient;
   phrases: Phrases = new Phrases();
 
-  constructor(http: HttpClient) {
+  constructor(http: HttpClient, private configService: ConfigService) {
     //this.phrases = PHRASE_DATA;
     this.http = http;
 
@@ -22,6 +22,10 @@ export class PhraseService {
     //     //console.log('Phrases loaded:', this.phrases);
     //   }
     // );
+  }
+
+  private get categoryUrl(): string {
+    return `${this.configService.cfg.apiUrl}`;
   }
 
   loadPhrases(
@@ -43,7 +47,7 @@ export class PhraseService {
     //console.log(`Fetching phrases for book ID: ${bookid}, page: ${firstpage}, page size: ${pagesize}`);
 
     return this.http.get<Phrases>(
-      `${Environment.apiUrl}/api/PhraseStorage/list?bookId=${bookid}&sortBy=frequency&order=desc&page=${firstpage}&pageSize=${pagesize}`
+      `${this.categoryUrl}/api/PhraseStorage/list?bookId=${bookid}&sortBy=frequency&order=desc&page=${firstpage}&pageSize=${pagesize}`
     );
   }
 
@@ -64,7 +68,7 @@ export class PhraseService {
 
   isFavorite(phraseId: string): Observable<boolean> {
     return this.http.get<boolean>(
-      `${Environment.apiUrl}/api/userwords/favorites/${phraseId}`
+      `${this.categoryUrl}/api/userwords/favorites/${phraseId}`
     );
   }
 
@@ -72,13 +76,13 @@ export class PhraseService {
     if (isFavorite) {
       // Hozzáadás
       return this.http.post(
-        `${Environment.apiUrl}/api/userwords/favorites/${phraseId}`,
+        `${this.categoryUrl}/api/userwords/favorites/${phraseId}`,
         {}
       );
     } else {
       // Törlés
       return this.http.delete(
-        `${Environment.apiUrl}/api/userwords/favorites/${phraseId}`
+        `${this.categoryUrl}/api/userwords/favorites/${phraseId}`
       );
     }
   }
@@ -91,7 +95,7 @@ export class PhraseService {
     });
 
     return this.http.post(
-      `${Environment.apiUrl}/api/PhraseStorage/store?bookId=${bookId}`,
+      `${this.categoryUrl}/api/PhraseStorage/store?bookId=${bookId}`,
       {},
       { headers }
     );
